@@ -110,7 +110,7 @@ Agora pense: como o programa transforma entrada em saída?
 
 Essa é a hora de treinar prever os erros mais comuns e evitar surpresas.
 
-Diferenças na entrada, números maliciosos, ter 1 maçã e querer dar 5 maçãs; a ideia é imaginar situações que o seu codigo pode ter comportamentos incorretos; Somos brasileiros, somos bons nisso!
+Diferenças na entrada, números maliciosos, ter 1 maçã e querer dar 5 maçãs; a ideia é imaginar situações que o seu codigo pode ter comportamentos incorretos;
 
 💭 Pergunte-se:
 - E se a entrada for vazia?
