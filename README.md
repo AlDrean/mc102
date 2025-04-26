@@ -30,7 +30,9 @@ Antes de escrever código, entenda o problema.
 + Imagine que está explicando o problema para uma criança ou para alguém que nunca viu código.
 +  Use fluxogramas simples ou listas de passos.
 
+  
 
+  
 
 ## 📥 Etapa 2: Escreva as entradas e saídas do programa
 
@@ -110,7 +112,7 @@ Agora pense: como o programa transforma entrada em saída?
 
 Essa é a hora de treinar prever os erros mais comuns e evitar surpresas.
 
-Diferenças na entrada, números maliciosos, ter 1 maçã e querer dar 5 maçãs; a ideia é imaginar situações que o seu codigo pode ter comportamentos incorretos;
+Diferenças na entrada, números maliciosos, ter 1 maçã e querer dar 5 maçãs; a ideia é imaginar situações que o seu codigo pode ter comportamentos incorretos; Somos brasileiros, somos bons nisso!
 
 💭 Pergunte-se:
 - E se a entrada for vazia?
@@ -391,60 +393,52 @@ compra = []
 
 # Função para adicionar um item à compra
 def adicionar_item(nome, preco):
+    if preco <= 0:
+        print("❌ Erro: Preço deve ser positivo.")
+        return False
     compra.append({'nome': nome, 'preco': preco})
-
+    print(f"✅ Item '{nome}' adicionado!")
+    return True
+    
 # Função para remover um item da compra
 def remover_item(nome):
     for item in compra:
         if item['nome'] == nome:
             compra.remove(item)
+            print(f"✅ Item '{nome}' removido!")
             return True
+    print(f"❌ Item '{nome}' não encontrado.")
     return False
-
+    
 # Função para calcular o total da compra
+  
 def calcular_total():
-    total = 0
-    for item in compra:
-        total += item['preco']
+    total = sum(item['preco'] for item in compra)
+    print(f"💳 Total da compra: R${total:.2f}" if total else "🛒 Nenhum item na lista.")
     return total
-
+    
 # Função para exibir os itens da compra
-def listar_itens():
-    if not compra:
-        return "Sua lista de compras está vazia."
-    itens = "\n".join([f"{item['nome']} - R${item['preco']}" for item in compra])
-    return itens
-
+def  listar_itens():  if  not compra:  return  "🛒 Sua lista está vazia."  return  "\n".join([f"📦 {item['nome']} - R${item['preco']:.2f}"  for item in compra])
 ```
 
 
 Agora vamos rodar os testes e comparar os resultados.
 ```python
-# Teste 1: Adicionar itens à compra
+# Teste 1: Adicionar item com preço inválido
+adicionar_item("Item Inválido", -10)  # ❌ Erro esperado
 
-adicionar_item("Camiseta", 29.90)
-adicionar_item("Calça", 49.90)
+# Teste 2: Adicionar itens válidos
+adicionar_item("Camiseta", 29.90)     # ✅
+adicionar_item("Calça", 49.90)        # ✅
 
+# Teste 3: Listar itens
+print(listar_itens())  # 📦 Camiseta - R$29.90 \n 📦 Calça - R$49.90
 
-# Teste 2: Listar itens
-print(listar_itens()) # Esperado: Camiseta - R$29.90 \n Calça - R$49.90
+# Teste 4: Remover item inexistente
+remover_item("Tênis")  # ❌ Item não encontrado
 
-  
-
-# Teste 3: Remover um item
-remover_item("Camiseta")
-
-# Teste 4: Listar itens novamente
-print(listar_itens()) # Esperado: Calça - R$49.90
-
-  
-
-# Teste 5: Remover um item que não existe
-remover_item("Tênis") # Esperado: False, pois o item não está na lista.
- 
-
-# Teste 6: Calcular total da compra
-print(calcular_total()) # Esperado: 49.90
+# Teste 5: Calcular total
+calcular_total()       # 💳 Total: R$79.80
 
 ```
 ## 🕵️ Hora de debugar!
@@ -476,4 +470,82 @@ Cheque o que acontece quando a lista está vazia: Se o total estiver incorreto o
 
 Leia o erro: Se o programa der um erro, olhe a mensagem com calma. O Python geralmente te diz exatamente onde o problema ocorreu, como na falta de um item ou tipo errado de dado.
 
-Boa sorte codando e debugando!
+# Boa sorte e bom Debugging!
+__ 
+
+
+
+## _PS: 🕵️ Não achei o erro!_
+>Esse é o momento que a criança chora e a mãe não vê
+
+Nessas horas, você tem que rever toda a sua lógica. A minha sugestão é a tecnica de debug ou depuração do  patinho companheiro <https://pt.wikipedia.org/wiki/Debug_com_Pato_de_Borracha> 
+
+**Você:**  _"Patinho, meu código deveria calcular o total da compra, mas quando removo um item, o valor não atualiza direito. Não sei onde está o erro!"_
+
+**Patinho:**  _"Quack! (tradução: 'Mostre-me o código e explique o que cada parte faz.')"_
+
+
+### explicando linha por linha
+```python
+def remover_item(nome):
+    for item in compra:  # Aqui eu percorro cada item na lista 'compra'
+        if item['nome'] == nome:  # Se o nome do item bater com o que quero remover...
+            compra.remove(item)  # ...eu removo o item da lista.
+            return True  # E retorno True pra confirmar que deu certo.
+    return False  # Se não achar, retorno False.
+```
+
+**Você:**  _"Patinho, essa função deveria remover um item pelo nome e retornar  `True`  se conseguir, ou  `False`  se não achar. Mas quando testo, parece que ela não remove direito. Olha só:"_
+```python
+adicionar_item("Camiseta", 29.90)
+adicionar_item("Calça", 49.90)
+remover_item("Camiseta")  # Era pra remover, mas às vezes não funciona!
+```
+**Patinho:**  _"Quack!"_ 
+```python 
+### Testando a hipoteses 
+def remover_item(nome):
+    print(f"Lista ANTES de remover: {compra}")  # Debug: mostra a lista antes
+    for item in compra:
+        if item['nome'] == nome:
+            compra.remove(item)
+            print(f"Lista DEPOIS de remover: {compra}")  # Debug: mostra depois
+            return True
+    return False
+```
+
+```terminal
+Lista ANTES de remover: [{'nome': 'Camiseta', 'preco': 29.9}, {'nome': 'Calça', 'preco': 49.9}]  
+Lista DEPOIS de remover: [{'nome': 'Calça', 'preco': 49.9}]  # Parece correto!
+```
+**Você:**  _"Patinho, olha só! A lista está sendo alterada, mas em outro lugar do código o total não atualiza. Será que o problema está na função  `calcular_total`?_
+
+```python
+def calcular_total():
+    total = 0
+    for item in compra:  # Percorre a lista 'compra'
+        total += item['preco']  # Soma todos os preços
+    return total  # Retorna o valor
+ ```
+```python 
+remover_item("Camiseta")
+print(calcular_total())  # Mostra o total atualizado?
+``` 
+```
+49.9  # Funcionou! Então o problema não está aqui...
+```
+
+**Você (lembrando):**  _"Ah! Eu esqueci de  **atualizar o total**  na interface do usuário! O código remove o item, mas não mostra o novo total automaticamente!"_
+
+
+```python
+remover_item("Camiseta")  print("Total atualizado:", calcular_total())  # Agora sim!
+```
+
+**Você:** _Agora eu posso adicionar o print no final e ver o valor certo_
+```python
+adicionar_item("Camiseta", 29.90)
+adicionar_item("Calça", 49.90)
+remover_item("Camiseta")  
+print("Total atualizado:", calcular_total()) # faltava essa linha
+```
